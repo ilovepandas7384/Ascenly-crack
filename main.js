@@ -3631,7 +3631,7 @@ function b07TQe() {
     if (!mxtpIbz.key) {
       return { ok: false, status: 401, json: async () => ({ error: "Missing Gemini API Key" }) };
     }
-    await new Promise(r => setTimeout(r, 5000));
+    await new Promise(r => setTimeout(r, 1));
     const isJson = Q16EmFG === "/gemini";
     const promptText = typeof vDlnfHc === "string"
       ? vDlnfHc
@@ -6139,14 +6139,21 @@ async function QPmrg0(ldXU2Ow) {
     return document.querySelectorAll(".learnosity-item[data-reference]");
   });
 async function C62jzxW(ldXU2Ow) {
-  const results = [];
-  for (const itemId of ldXU2Ow) {
+  return (await Promise.all(ldXU2Ow.map(async (itemId) => {
     const el = document.querySelector(`.learnosity-item[data-reference="${CSS.escape(itemId)}"]`);
-    if (!el) continue;
+    if (!el) return null;
 
-    const passageEl = el.closest("[class*='question-item'], [class*='item-container'], section, article")?.querySelector(".wnr-ccquestion-item-passage-section, .wnr-ccpassage-passage-container")
-      || document.querySelector(".wnr-ccquestion-item-passage-section, .wnr-ccpassage-passage-container");
-    const passageText = passageEl?.innerText?.trim() || "";
+    const passageSelectors = ".wnr-ccquestion-item-passage-section, .wnr-ccpassage-passage-container, .wnr-contentComponent-type-quote-builtin";
+    const scopeEl = el.closest("[class*='question-item'], [class*='item-container'], section, article") || document;
+    let passageEls = Array.from(scopeEl.querySelectorAll(passageSelectors));
+    if (!passageEls.length && scopeEl !== document) {
+      passageEls = Array.from(document.querySelectorAll(passageSelectors));
+    }
+    const topLevelPassages = passageEls.filter(node => !passageEls.some(other => other !== node && other.contains(node)));
+    const passageText = Array.from(new Set(
+      topLevelPassages.map(node => node.innerText?.replace(/\s+/g, " ").trim()).filter(Boolean)
+    )).join("\n\n");
+    const questionText = el.innerText.replace(/\s+/g, " ").trim();
 
     const mcqOptions = Array.from(el.querySelectorAll(".lrn-mcq-option")).map((opt, idx) => ({
       index: idx,
@@ -6195,7 +6202,7 @@ async function C62jzxW(ldXU2Ow) {
       '- classification: correctAnswer = [[dataIndex numbers for Zone 0], [dataIndex numbers for Zone 1], ...]',
       '- choicematrix: stimulusList = exact Matrix Rows array; correctAnswer = ["colIndex string matching each stimulusList row"]',
       passageText ? "Reading Passage:\n" + passageText : "",
-      "Question text:\n" + el.innerText.trim(),
+      "Question text:\n" + questionText,
       mcqOptions.length ? "MCQ Options:\n" + JSON.stringify(mcqOptions) : "",
       clozeSelects.length ? "Dropdown Blanks (use exact choices):\n" + JSON.stringify(clozeSelects) : "",
       clozeInputs.length ? `Text Blanks (MUST return exactly ${clozeInputs.length} answers in order of blankIndex):\n` + JSON.stringify(clozeInputs) : "",
@@ -6212,18 +6219,18 @@ async function C62jzxW(ldXU2Ow) {
       const data = await res.json();
       if (Array.isArray(data?.correctAnswer) && data.correctAnswer.length) {
         const type = clozeInputs.length > 1 ? "clozetext" : (data.type || (matrixRows.length ? "choicematrix" : clozeSelects.length ? "clozedropdown" : clozeInputs.length ? "clozetext" : "mcq"));
-        results.push({
+        return {
           reference: itemId,
           type,
           correctAnswer: type === "classification" ? data.correctAnswer : data.correctAnswer.map(String),
           stimulusList: Array.isArray(data.stimulusList) && data.stimulusList.length
             ? data.stimulusList.map(String)
             : (type === "choicematrix" ? matrixRows : [])
-        });
+        };
       }
     }
-  }
-  return results;
+    return null;
+  }))).filter(result => result !== null);
 }
   function Mh83ENt() {
     if (Ene7WFT(() => {
