@@ -7,6 +7,8 @@
 // @grant        GM_setValue
 // @grant        GM_xmlhttpRequest
 // @grant        unsafeWindow
+// @updateURL    https://raw.githubusercontent.com/ilovepandas7384/Ascenly-crack/refs/heads/main/main.js
+// @downloadURL  https://raw.githubusercontent.com/ilovepandas7384/Ascenly-crack/refs/heads/main/main.js
 // @run-at       document-start
 // @noframes
 // ==/UserScript==
@@ -6831,7 +6833,7 @@ function vh7Uk0() {
           return;
         }
         let vDlnfHc = oOSpQ0F.value.trim();
-        if (!/^AIza[0-9A-Za-z_-]{30,}$/.test(vDlnfHc)) {
+        if (!/^(AIza|AQ\.)[0-9A-Za-z._-]{25,}$/.test(vDlnfHc)) {
           yctckmj(vDlnfHc ? "Check your key and try again." : "Enter your access key.");
           return;
         }
@@ -6868,7 +6870,7 @@ function vh7Uk0() {
       ["ariaLabel"]: "Access key",
       ["spellcheck"]: !1,
       ["autoComplete"]: "off",
-      ["maxLength"]: 60
+      ["maxLength"]: 150
     });
     let KhDI0Qx = ln2PPf1(Q16EmFG ? "Redeem" : "Continue", l06wN2S, "pv-key-submit");
     let HoK2xH = Pz5RdVt("div", {
