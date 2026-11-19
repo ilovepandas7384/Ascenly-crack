@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Ascenly (Gemini)
-// @version      3.0.9
+// @version      1.0.0
 // @match        *://*.edgenuity.com/*
 // @connect      generativelanguage.googleapis.com
 // @grant        GM_getValue
